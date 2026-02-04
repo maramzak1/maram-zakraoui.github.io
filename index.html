@@ -20,6 +20,18 @@
             --gradient-accent: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(45, 95, 158, 0.05) 100%);
         }
 
+        [data-theme="light"] {
+            --color-bg: #ffffff;
+            --color-surface: #f8f9fa;
+            --color-accent: #2d5f9e;
+            --color-accent-bright: #4a9eff;
+            --color-text: #1a1f2e;
+            --color-text-muted: #5a6372;
+            --color-border: #e1e4e8;
+            --gradient-primary: linear-gradient(135deg, #2d5f9e 0%, #4a9eff 100%);
+            --gradient-accent: linear-gradient(135deg, rgba(45, 95, 158, 0.05) 0%, rgba(74, 158, 255, 0.03) 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -32,6 +44,7 @@
             color: var(--color-text);
             line-height: 1.7;
             overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .grain-overlay {
@@ -62,6 +75,11 @@
             border-bottom: 1px solid var(--color-border);
             z-index: 1000;
             animation: slideDown 0.6s ease-out;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="light"] .header {
+            background: rgba(255, 255, 255, 0.8);
         }
 
         @keyframes slideDown {
@@ -92,6 +110,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
         }
 
         .nav-links {
@@ -127,6 +151,49 @@
 
         .nav-links a:hover::after {
             width: 100%;
+        }
+
+        /* Theme and Language Controls */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle,
+        .lang-toggle {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--color-text);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .theme-toggle:hover,
+        .lang-toggle:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .lang-option {
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-option.active {
+            background: var(--gradient-primary);
+            color: white;
         }
 
         /* Hero Section */
@@ -390,6 +457,8 @@
             justify-content: center;
             font-size: 1.8rem;
             margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: var(--color-accent-bright);
         }
 
         .project-card h3 {
@@ -504,9 +573,18 @@
             transform: translateY(-4px);
         }
 
-        .cert-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
+        .cert-badge {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--color-accent-bright);
         }
 
         .cert-card h4 {
@@ -553,18 +631,13 @@
             transform: translateY(-4px);
         }
 
-        .contact-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--color-accent-bright);
-        }
-
-        .contact-card h4 {
+        .contact-label {
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 0.8rem;
             color: var(--color-text-muted);
+            font-weight: 600;
         }
 
         .contact-card a {
@@ -588,23 +661,6 @@
 
         .footer p {
             margin-bottom: 1rem;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-links a {
-            color: var(--color-text-muted);
-            font-size: 1.5rem;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--color-accent-bright);
         }
 
         /* Responsive Design */
@@ -638,11 +694,26 @@
             section {
                 padding: 5rem 0;
             }
+
+            .controls {
+                gap: 0.5rem;
+            }
+
+            .theme-toggle,
+            .lang-toggle {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
         }
 
         /* Smooth Scrolling */
         html {
             scroll-behavior: smooth;
+        }
+
+        /* Hidden class for language switching */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -653,13 +724,24 @@
     <header class="header">
         <nav class="nav">
             <div class="logo">MZ</div>
-            <ul class="nav-links">
-                <li><a href="#about">À propos</a></li>
-                <li><a href="#projects">Projets</a></li>
-                <li><a href="#experience">Expérience</a></li>
-                <li><a href="#certifications">Certifications</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#about" data-fr="À propos" data-en="About">À propos</a></li>
+                    <li><a href="#projects" data-fr="Projets" data-en="Projects">Projets</a></li>
+                    <li><a href="#experience" data-fr="Expérience" data-en="Experience">Expérience</a></li>
+                    <li><a href="#certifications" data-fr="Certifications" data-en="Certifications">Certifications</a></li>
+                    <li><a href="#contact" data-fr="Contact" data-en="Contact">Contact</a></li>
+                </ul>
+                <div class="controls">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <span class="theme-icon">☀️</span>
+                    </button>
+                    <div class="lang-toggle">
+                        <span class="lang-option active" data-lang="fr" onclick="setLanguage('fr')">FR</span>
+                        <span class="lang-option" data-lang="en" onclick="setLanguage('en')">EN</span>
+                    </div>
+                </div>
+            </div>
         </nav>
     </header>
 
@@ -667,17 +749,17 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-tag">Étudiante en Intelligence Artificielle</div>
+                <div class="hero-tag" data-fr="Étudiante en Intelligence Artificielle" data-en="Artificial Intelligence Student">Étudiante en Intelligence Artificielle</div>
                 <h1>
-                    Bonjour, je suis<br>
+                    <span data-fr="Bonjour, je suis" data-en="Hello, I'm">Bonjour, je suis</span><br>
                     <span class="gradient-text">Maram Zakraoui</span>
                 </h1>
-                <p class="hero-subtitle">
+                <p class="hero-subtitle" data-fr="Passionnée par l'IA et le Deep Learning, je développe des solutions innovantes en vision par ordinateur, analyse d'images médicales et systèmes intelligents." data-en="Passionate about AI and Deep Learning, I develop innovative solutions in computer vision, medical image analysis, and intelligent systems.">
                     Passionnée par l'IA et le Deep Learning, je développe des solutions innovantes en vision par ordinateur, analyse d'images médicales et systèmes intelligents.
                 </p>
                 <div class="hero-cta">
-                    <a href="#contact" class="btn btn-primary">Me contacter</a>
-                    <a href="#projects" class="btn btn-secondary">Voir mes projets</a>
+                    <a href="#contact" class="btn btn-primary" data-fr="Me contacter" data-en="Contact Me">Me contacter</a>
+                    <a href="#projects" class="btn btn-secondary" data-fr="Voir mes projets" data-en="View Projects">Voir mes projets</a>
                 </div>
             </div>
         </div>
@@ -687,38 +769,39 @@
     <section id="about">
         <div class="container">
             <div class="section-header">
-                <div class="section-tag">À propos de moi</div>
-                <h2 class="section-title">Qui suis-je ?</h2>
+                <div class="section-tag" data-fr="À propos de moi" data-en="About Me">À propos de moi</div>
+                <h2 class="section-title" data-fr="Qui suis-je ?" data-en="Who Am I?">Qui suis-je ?</h2>
             </div>
             <div class="about-content">
                 <div class="about-text">
-                    <h3>Étudiante Ingénieure IA à ESPRIT, Tunisie</h3>
-                    <p>
+                    <h3 data-fr="Étudiante Ingénieure IA à ESPRIT, Tunisie" data-en="AI Engineering Student at ESPRIT, Tunisia">Étudiante Ingénieure IA à ESPRIT, Tunisie</h3>
+                    <p data-fr="Actuellement en 2ème année du cycle d'ingénieur en Intelligence Artificielle à l'ESPRIT, je possède de solides bases en machine learning, deep learning et génie logiciel." data-en="Currently in my 2nd year of AI Engineering at ESPRIT, I have strong foundations in machine learning, deep learning, and software engineering.">
                         Actuellement en 2ème année du cycle d'ingénieur en Intelligence Artificielle à l'ESPRIT, je possède de solides bases en machine learning, deep learning et génie logiciel.
                     </p>
-                    <p>
+                    <p data-fr="Mon expérience pratique couvre la vision par ordinateur, l'analyse d'images médicales, les systèmes de recommandation et les agents IA intelligents. Je m'engage activement dans des projets innovants et cherche constamment à approfondir mes connaissances." data-en="My hands-on experience covers computer vision, medical image analysis, recommendation systems, and intelligent AI agents. I actively engage in innovative projects and constantly seek to deepen my knowledge.">
                         Mon expérience pratique couvre la vision par ordinateur, l'analyse d'images médicales, les systèmes de recommandation et les agents IA intelligents. Je m'engage activement dans des projets innovants et cherche constamment à approfondir mes connaissances.
                     </p>
                     <p>
-                        <strong>Langues :</strong> Arabe (natif), Français (B2), Anglais (B2), Espagnol (A1)
+                        <strong data-fr="Langues :" data-en="Languages:">Langues :</strong> 
+                        <span data-fr="Arabe (natif), Français (B2), Anglais (B2), Espagnol (A1)" data-en="Arabic (Native), French (B2), English (B2), Spanish (A1)">Arabe (natif), Français (B2), Anglais (B2), Espagnol (A1)</span>
                     </p>
                 </div>
                 <div class="skills-grid">
                     <div class="skill-category">
-                        <h4>🤖 IA & Data Science</h4>
-                        <p>Machine Learning, Deep Learning, Computer Vision, CNNs, RAG Systems, Analyse d'images</p>
+                        <h4 data-fr="IA & Data Science" data-en="AI & Data Science">IA & Data Science</h4>
+                        <p data-fr="Machine Learning, Deep Learning, Computer Vision, CNNs, RAG Systems, Analyse d'images" data-en="Machine Learning, Deep Learning, Computer Vision, CNNs, RAG Systems, Image Analysis">Machine Learning, Deep Learning, Computer Vision, CNNs, RAG Systems, Analyse d'images</p>
                     </div>
                     <div class="skill-category">
-                        <h4>💻 Programmation</h4>
+                        <h4 data-fr="Programmation" data-en="Programming">Programmation</h4>
                         <p>Python, C/C++, Java, JavaScript, PHP, SQL, HTML/CSS</p>
                     </div>
                     <div class="skill-category">
-                        <h4>🛠️ Frameworks & Outils</h4>
+                        <h4>Frameworks & Tools</h4>
                         <p>TensorFlow, Django, Symfony, FlutterFlow, Qt, SSIS, MySQL</p>
                     </div>
                     <div class="skill-category">
-                        <h4>🎯 Soft Skills</h4>
-                        <p>Travail d'équipe, Organisation d'événements, Leadership, Communication</p>
+                        <h4>Soft Skills</h4>
+                        <p data-fr="Travail d'équipe, Organisation d'événements, Leadership, Communication" data-en="Teamwork, Event Organization, Leadership, Communication">Travail d'équipe, Organisation d'événements, Leadership, Communication</p>
                     </div>
                 </div>
             </div>
@@ -729,17 +812,17 @@
     <section id="projects" style="background: var(--color-surface);">
         <div class="container">
             <div class="section-header">
-                <div class="section-tag">Réalisations</div>
-                <h2 class="section-title">Projets Académiques</h2>
-                <p class="section-description">
+                <div class="section-tag" data-fr="Réalisations" data-en="Achievements">Réalisations</div>
+                <h2 class="section-title" data-fr="Projets Académiques" data-en="Academic Projects">Projets Académiques</h2>
+                <p class="section-description" data-fr="Une sélection de mes projets académiques en Intelligence Artificielle et Deep Learning" data-en="A selection of my academic projects in Artificial Intelligence and Deep Learning">
                     Une sélection de mes projets académiques en Intelligence Artificielle et Deep Learning
                 </p>
             </div>
             <div class="projects-grid">
                 <div class="project-card">
-                    <div class="project-icon">🧠</div>
+                    <div class="project-icon">DL</div>
                     <h3>Deep Learning & Computer Vision</h3>
-                    <p>
+                    <p data-fr="Conception et entraînement de modèles CNN pour la classification d'images et l'analyse de données visuelles avec optimisation des performances." data-en="Design and training of CNN models for image classification and visual data analysis with performance optimization.">
                         Conception et entraînement de modèles CNN pour la classification d'images et l'analyse de données visuelles avec optimisation des performances.
                     </p>
                     <div class="project-tags">
@@ -750,9 +833,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-icon">🔍</div>
-                    <h3>Système de Recommandation RAG</h3>
-                    <p>
+                    <div class="project-icon">RAG</div>
+                    <h3 data-fr="Système de Recommandation RAG" data-en="RAG Recommendation System">Système de Recommandation RAG</h3>
+                    <p data-fr="Implémentation d'une architecture de génération augmentée par récupération pour améliorer les recommandations contextuelles et personnalisées." data-en="Implementation of retrieval-augmented generation architecture to enhance contextual and personalized recommendations.">
                         Implémentation d'une architecture de génération augmentée par récupération pour améliorer les recommandations contextuelles et personnalisées.
                     </p>
                     <div class="project-tags">
@@ -763,9 +846,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-icon">🏥</div>
-                    <h3>Analyse d'Images Médicales</h3>
-                    <p>
+                    <div class="project-icon">MED</div>
+                    <h3 data-fr="Analyse d'Images Médicales" data-en="Medical Image Analysis">Analyse d'Images Médicales</h3>
+                    <p data-fr="Développement de modèles CNN pour la détection d'anomalies sur des radiographies, contribuant à l'amélioration du diagnostic médical assisté par IA." data-en="Development of CNN models for anomaly detection in X-rays, contributing to improved AI-assisted medical diagnosis.">
                         Développement de modèles CNN pour la détection d'anomalies sur des radiographies, contribuant à l'amélioration du diagnostic médical assisté par IA.
                     </p>
                     <div class="project-tags">
@@ -776,9 +859,9 @@
                 </div>
 
                 <div class="project-card">
-                    <div class="project-icon">🤖</div>
-                    <h3>Système d'Agents IA</h3>
-                    <p>
+                    <div class="project-icon">AI</div>
+                    <h3 data-fr="Système d'Agents IA" data-en="Agentic AI System">Système d'Agents IA</h3>
+                    <p data-fr="Construction d'agents IA autonomes capables de raisonnement, planification et prise de décision pour automatiser des tâches complexes." data-en="Building autonomous AI agents capable of reasoning, planning, and decision-making to automate complex tasks.">
                         Construction d'agents IA autonomes capables de raisonnement, planification et prise de décision pour automatiser des tâches complexes.
                     </p>
                     <div class="project-tags">
@@ -795,19 +878,19 @@
     <section id="experience">
         <div class="container">
             <div class="section-header">
-                <div class="section-tag">Parcours professionnel</div>
-                <h2 class="section-title">Expérience</h2>
+                <div class="section-tag" data-fr="Parcours professionnel" data-en="Professional Journey">Parcours professionnel</div>
+                <h2 class="section-title" data-fr="Expérience" data-en="Experience">Expérience</h2>
             </div>
             <div class="experience-timeline">
                 <div class="experience-item">
                     <div class="experience-header">
                         <div>
-                            <h3>Stagiaire Machine Learning</h3>
-                            <div class="experience-company">Wevloo</div>
+                            <h3 data-fr="Stagiaire Machine Learning" data-en="Machine Learning Intern">Stagiaire Machine Learning</h3>
+                            <div class="experience-company">Wevioo</div>
                         </div>
-                        <div class="experience-date">2025 · 1.5 mois</div>
+                        <div class="experience-date" data-fr="2025 · 1.5 mois" data-en="2025 · 1.5 months">2025 · 1.5 mois</div>
                     </div>
-                    <p class="experience-description">
+                    <p class="experience-description" data-fr="Développement de modèles de vision par ordinateur, amélioration des pipelines IA et contribution aux outils basés sur l'intelligence artificielle." data-en="Development of computer vision models, improvement of AI pipelines, and contribution to AI-based tools.">
                         Développement de modèles de vision par ordinateur, amélioration des pipelines IA et contribution aux outils basés sur l'intelligence artificielle.
                     </p>
                 </div>
@@ -815,12 +898,12 @@
                 <div class="experience-item">
                     <div class="experience-header">
                         <div>
-                            <h3>Stagiaire Full Stack</h3>
+                            <h3 data-fr="Stagiaire Full Stack" data-en="Full Stack Intern">Stagiaire Full Stack</h3>
                             <div class="experience-company">Majda Smart Solution</div>
                         </div>
-                        <div class="experience-date">2024 · 1 mois</div>
+                        <div class="experience-date" data-fr="2024 · 1 mois" data-en="2024 · 1 month">2024 · 1 mois</div>
                     </div>
-                    <p class="experience-description">
+                    <p class="experience-description" data-fr="Création d'applications web, développement d'API et intégration backend-frontend pour des solutions complètes." data-en="Creation of web applications, API development, and backend-frontend integration for complete solutions.">
                         Création d'applications web, développement d'API et intégration backend-frontend pour des solutions complètes.
                     </p>
                 </div>
@@ -828,12 +911,12 @@
                 <div class="experience-item">
                     <div class="experience-header">
                         <div>
-                            <h3>Stagiaire Support</h3>
+                            <h3 data-fr="Stagiaire Support" data-en="Support Intern">Stagiaire Support</h3>
                             <div class="experience-company">ESPRIT Career Center</div>
                         </div>
-                        <div class="experience-date">2024 · 1 mois</div>
+                        <div class="experience-date" data-fr="2024 · 1 mois" data-en="2024 · 1 month">2024 · 1 mois</div>
                     </div>
-                    <p class="experience-description">
+                    <p class="experience-description" data-fr="Assistance dans l'organisation d'événements de carrière, d'ateliers étudiants et d'activités de coaching professionnel." data-en="Assistance in organizing career events, student workshops, and professional coaching activities.">
                         Assistance dans l'organisation d'événements de carrière, d'ateliers étudiants et d'activités de coaching professionnel.
                     </p>
                 </div>
@@ -841,12 +924,12 @@
                 <div class="experience-item">
                     <div class="experience-header">
                         <div>
-                            <h3>Stagiaire Formation</h3>
+                            <h3 data-fr="Stagiaire Formation" data-en="Training Intern">Stagiaire Formation</h3>
                             <div class="experience-company">Orange Tunisie</div>
                         </div>
                         <div class="experience-date">2023 · 1 mois</div>
                     </div>
-                    <p class="experience-description">
+                    <p class="experience-description" data-fr="Exposition aux environnements corporatifs, développement du travail d'équipe et de la communication professionnelle." data-en="Exposure to corporate environments, development of teamwork and professional communication.">
                         Exposition aux environnements corporatifs, développement du travail d'équipe et de la communication professionnelle.
                     </p>
                 </div>
@@ -858,29 +941,29 @@
     <section id="certifications" style="background: var(--color-surface);">
         <div class="container">
             <div class="section-header">
-                <div class="section-tag">Apprentissage continu</div>
+                <div class="section-tag" data-fr="Apprentissage continu" data-en="Continuous Learning">Apprentissage continu</div>
                 <h2 class="section-title">Certifications</h2>
             </div>
             <div class="certifications-grid">
                 <div class="cert-card">
-                    <div class="cert-icon">🎓</div>
+                    <div class="cert-badge">DL</div>
                     <h4>Deep Learning</h4>
                     <div class="cert-issuer">NVIDIA</div>
                     <div class="cert-year">2024</div>
                 </div>
 
                 <div class="cert-card">
-                    <div class="cert-icon">🎨</div>
+                    <div class="cert-badge">GEN</div>
                     <h4>Generative AI with Diffusion Models</h4>
                     <div class="cert-issuer">NVIDIA</div>
                     <div class="cert-year">2025</div>
                 </div>
 
                 <div class="cert-card">
-                    <div class="cert-icon">🤖</div>
+                    <div class="cert-badge">AI</div>
                     <h4>Building AI Agents with Multimodal Models</h4>
                     <div class="cert-issuer">NVIDIA</div>
-                    <div class="cert-year">Janvier 2025</div>
+                    <div class="cert-year" data-fr="Janvier 2025" data-en="January 2025">Janvier 2025</div>
                 </div>
             </div>
         </div>
@@ -891,28 +974,25 @@
         <div class="container">
             <div class="contact-content">
                 <div class="section-header">
-                    <div class="section-tag">Restons en contact</div>
-                    <h2 class="section-title">Contactez-moi</h2>
-                    <p class="section-description">
+                    <div class="section-tag" data-fr="Restons en contact" data-en="Let's Connect">Restons en contact</div>
+                    <h2 class="section-title" data-fr="Contactez-moi" data-en="Contact Me">Contactez-moi</h2>
+                    <p class="section-description" data-fr="N'hésitez pas à me contacter pour toute opportunité de collaboration, stage ou projet innovant en IA." data-en="Feel free to contact me for any collaboration opportunity, internship, or innovative AI project.">
                         N'hésitez pas à me contacter pour toute opportunité de collaboration, stage ou projet innovant en IA.
                     </p>
                 </div>
                 <div class="contact-grid">
                     <div class="contact-card">
-                        <div class="contact-icon">📧</div>
-                        <h4>Email</h4>
+                        <div class="contact-label">Email</div>
                         <a href="mailto:maram.zakraoui7@gmail.com">maram.zakraoui7@gmail.com</a>
                     </div>
 
                     <div class="contact-card">
-                        <div class="contact-icon">📱</div>
-                        <h4>Téléphone</h4>
+                        <div class="contact-label" data-fr="Téléphone" data-en="Phone">Téléphone</div>
                         <a href="tel:+21650591799">+216 50 591 799</a>
                     </div>
 
                     <div class="contact-card">
-                        <div class="contact-icon">💼</div>
-                        <h4>LinkedIn</h4>
+                        <div class="contact-label">LinkedIn</div>
                         <a href="https://www.linkedin.com/in/maram-zakraoui" target="_blank">maram zakraoui</a>
                     </div>
                 </div>
@@ -923,14 +1003,75 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2025 Maram Zakraoui. Tous droits réservés.</p>
+            <p data-fr="© 2025 Maram Zakraoui. Tous droits réservés." data-en="© 2025 Maram Zakraoui. All rights reserved.">© 2025 Maram Zakraoui. Tous droits réservés.</p>
             <p style="font-size: 0.9rem; margin-top: 0.5rem;">
-                Étudiante en Intelligence Artificielle | ESPRIT, Tunisie
+                <span data-fr="Étudiante en Intelligence Artificielle | ESPRIT, Tunisie" data-en="Artificial Intelligence Student | ESPRIT, Tunisia">Étudiante en Intelligence Artificielle | ESPRIT, Tunisie</span>
             </p>
         </div>
     </footer>
 
     <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-icon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.querySelector('.theme-icon');
+            
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '🌙';
+            }
+            
+            const savedLang = localStorage.getItem('language') || 'fr';
+            setLanguage(savedLang);
+        });
+
+        // Language Toggle
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-fr], [data-en]');
+            
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${lang}`);
+                if (text) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = text;
+                    } else {
+                        element.textContent = text;
+                    }
+                }
+            });
+
+            // Update active language button
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.getAttribute('data-lang') === lang) {
+                    option.classList.add('active');
+                }
+            });
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+            
+            // Save preference
+            localStorage.setItem('language', lang);
+        }
+
         // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
